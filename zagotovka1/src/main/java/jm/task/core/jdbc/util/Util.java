@@ -31,7 +31,7 @@ public class Util {
 
     public static SessionFactory hibConnect() {
         return new Configuration()
-                .addResource("Mapp.hbm.xml")
+                .addClass(jm.task.core.jdbc.util.Mapp.class)
                 .setProperties(hibernateProperties())
                 .addAnnotatedClass(User.class)
                 .buildSessionFactory();
