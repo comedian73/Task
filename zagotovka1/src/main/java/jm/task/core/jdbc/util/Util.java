@@ -1,14 +1,9 @@
 package jm.task.core.jdbc.util;
 import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.*;
 import java.sql.*;
 import java.util.Properties;
-
 
 public class Util {
     private static final SessionFactory sessionFactory = hibConnect();
@@ -36,6 +31,7 @@ public class Util {
 
     public static SessionFactory hibConnect() {
         return new Configuration()
+                .addResource("Mapp.hbm.xml")
                 .setProperties(hibernateProperties())
                 .addAnnotatedClass(User.class)
                 .buildSessionFactory();

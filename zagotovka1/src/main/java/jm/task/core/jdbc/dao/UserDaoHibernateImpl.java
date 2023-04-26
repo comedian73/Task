@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
-   private Util connect = new Util();
 
     public UserDaoHibernateImpl() {}
 
