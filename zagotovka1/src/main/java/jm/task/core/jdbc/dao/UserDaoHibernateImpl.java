@@ -1,14 +1,19 @@
 package jm.task.core.jdbc.dao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
+import org.hibernate.query.Query;
 
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -69,16 +74,33 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-
+        Session session = Util.getSessionFactory().openSession();
+        session.beginTransaction();
+        User user = new User();
+        user = session.get(User.class, id);
+        session.delete(user);
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        Session session = Util.getSessionFactory().openSession();
+        session.beginTransaction();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        query.select(root);
+        List<User> list = session.createQuery(query).getResultList();
+        return list;
     }
 
     @Override
     public void cleanUsersTable() {
+        Session session = Util.getSessionFactory().openSession();
+        session.beginTransaction();
 
+        session.getTransaction().commit();
+        session.close();
     }
 }
