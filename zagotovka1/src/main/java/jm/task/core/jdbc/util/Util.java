@@ -22,11 +22,6 @@ public class Util {
         properties.put("hibernate.connection.password", "pass123");
         properties.put("connection.pool_size", "1");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-       // properties.put("hibernate.transform_hbm_xml.enabled", "true");
-//        properties.put("current_session_context_class", "thread");
-//        properties.put("hibernate.connection.provider_class", "ConnectionProvider");
-//        properties.put("hibernate.connection.handling_mode", "String");
-        //properties.put("hbm2ddl.auto", "update");
         return properties;
     }
 

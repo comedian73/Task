@@ -1,19 +1,11 @@
 package jm.task.core.jdbc.dao;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
-import org.hibernate.query.Query;
-
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.LinkedList;
+import java.sql.*;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -36,7 +28,6 @@ public class UserDaoHibernateImpl implements UserDao {
                    connection.close();
                 }
             });
-
         } catch (Exception e) {
             System.out.println("Что-то не так при подключении к БД! " + e);
         }
@@ -78,7 +69,7 @@ public class UserDaoHibernateImpl implements UserDao {
         session.beginTransaction();
         User user = new User();
         user = session.get(User.class, id);
-        session.delete(user);
+        session.remove(user);
         session.getTransaction().commit();
         session.close();
     }
@@ -92,15 +83,24 @@ public class UserDaoHibernateImpl implements UserDao {
         Root<User> root = query.from(User.class);
         query.select(root);
         List<User> list = session.createQuery(query).getResultList();
+        session.close();
         return list;
     }
 
     @Override
     public void cleanUsersTable() {
-        Session session = Util.getSessionFactory().openSession();
-        session.beginTransaction();
-
-        session.getTransaction().commit();
-        session.close();
+        try (Session session = Util.getSessionFactory().openSession()) {
+            session.doWork(new Work() {
+                @Override
+                public void execute(Connection connection) throws SQLException {
+                    Statement statement = connection.createStatement();
+                    statement.executeUpdate("TRUNCATE users RESTART IDENTITY");
+                    connection.commit();
+                    connection.close();
+                }
+            });
+        } catch (Exception e) {
+            System.out.println("Что-то не так при подключении к БД! " + e);
+        }
     }
 }

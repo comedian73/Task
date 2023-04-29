@@ -83,7 +83,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public void cleanUsersTable() {
         try(Connection connect = conn.connection()){
             Statement statement = connect.createStatement();
-            statement.executeUpdate("TRUNCATE users RESTART IDENTITY ");
+            statement.executeUpdate("TRUNCATE users RESTART IDENTITY");
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Что-то не так при подключении к БД! " + e);
         }
